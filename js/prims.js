@@ -217,6 +217,7 @@ function creuser(mesh0, mesh1){
     return csgMesh ;  
 }
 
+
 const PRIMS = {
 "camera":creerCamera,
 "reticule":creerReticule,
@@ -228,7 +229,7 @@ const PRIMS = {
 "meadow":creerPrairie,
 "ground":creerSol,
 "sky":creerCiel,
-"creuser" : creuser
+"creuser" : creuser,
 }
 
 export {PRIMS} ; 
