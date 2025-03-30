@@ -218,6 +218,82 @@ function creuser(mesh0, mesh1){
 }
 
 
+
+function createSlidingDoor(name, options, scn) {
+    let width = options.width || 2;
+    let height = options.height || 3;
+    let depth = options.depth || 0.1;
+    let material = options.material || new BABYLON.StandardMaterial("doorMat", scn);
+    
+    let door = BABYLON.MeshBuilder.CreateBox(name, { width, height, depth }, scn);
+    door.material = material;
+    door.checkCollisions = true;  
+    return door;
+}
+
+
+function animateDoor(door, fromPosition, toPosition, scene, speed = 1) {
+    return new Promise((resolve) => {
+        var frameRate = 40 * speed;  
+
+        var slideAnimation = new BABYLON.Animation("slideAnimation", "position", frameRate, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+        
+        var keys = []; 
+        keys.push({ frame: 0, value: fromPosition });
+        keys.push({ frame: 100, value: toPosition });
+        slideAnimation.setKeys(keys);
+
+        var animation = scene.beginDirectAnimation(door, [slideAnimation], 0, 100, false);
+
+        animation.onAnimationEnd = () => {
+            resolve();
+        };
+    });
+}
+
+function creerEscalier(name, opts, scn) {
+    let options = opts || {};
+    let steps = options.steps || 7;
+    let stepWidth = options.stepWidth || 3.0;
+    let stepHeight = options.stepHeight || 0.75;
+    let stepDepth = options.stepDepth || 0.3;
+    let materiau = options.materiau;
+
+    let stairs = new BABYLON.TransformNode(name + "-stairs", scn);
+
+    for (let i = 0; i < steps; i++) {
+        let step = BABYLON.MeshBuilder.CreateBox(name + "-step-" + i, {
+            width: stepWidth,
+            height: stepHeight,
+            depth: stepDepth
+        }, scn);
+        step.position.y = stepHeight / 2 + i * stepHeight;
+        step.position.z = i * stepDepth;
+        step.material = materiau;
+        step.checkCollisions = true; // Ensure collisions are enabled
+        step.parent = stairs;
+    }
+
+    return stairs;
+}
+
+function CreuserPorte(mur, position, scene){
+	let x = position.x;
+	let y = position.y;
+	let z = position.z;
+	let material = position.material;
+
+	const boite = BABYLON.MeshBuilder.CreateBox("boite",{height:6,width:3,depth:0.5,materialz:material}, scene) ; 
+
+	boite.position = new BABYLON.Vector3(x,y,z);
+	const porte = PRIMS.creuser(mur,boite);
+	porte.material = material;
+	porte.checkCollisions = true;
+	
+	return porte;
+}
+
+
 const PRIMS = {
 "camera":creerCamera,
 "reticule":creerReticule,
@@ -230,6 +306,10 @@ const PRIMS = {
 "ground":creerSol,
 "sky":creerCiel,
 "creuser" : creuser,
+"createSlidingDoor": createSlidingDoor, 
+"animateDoor": animateDoor,
+"creerEscalier": creerEscalier,
+"CreuserPorte" : CreuserPorte
 }
 
 export {PRIMS} ; 
