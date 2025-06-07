@@ -234,6 +234,59 @@ function CreuserPorte(mur, position, scene){
 	return porte;
 }
 
+function CreateRailing(scene) {
+    var materiauRampe = creerMateriauStandard("mat-plaque", { texture: "assets/griage.png" }, scene);
+    materiauRampe.diffuseTexture.hasAlpha = true;
+    materiauRampe.backFaceCulling = true;
+
+    var railing_hauteur = 1.5;
+    var epaisseur = 0.06;
+
+    // // Define railings for the platform at the top of the stairs
+    var platformRailings = [
+        { position: new BABYLON.Vector3(0, 5, 0), rotation: new BABYLON.Vector3(0, Math.PI, 0), largeur: 4.3, hauteur: 1.5 },
+        { position: new BABYLON.Vector3(4, 5, 0), rotation: new BABYLON.Vector3(0, Math.PI, 0), largeur: 4.3, hauteur: 1.5 },
+        { position: new BABYLON.Vector3(2 * 4, 5, 0), rotation: new BABYLON.Vector3(0, Math.PI, 0), largeur: 4.3, hauteur: 1.5 },
+        { position: new BABYLON.Vector3(-2 * 4, 5, 0), rotation: new BABYLON.Vector3(0, Math.PI, 0), largeur: 4.3, hauteur: 1.5 },
+        { position: new BABYLON.Vector3(- 4, 5, 0), rotation: new BABYLON.Vector3(0, Math.PI, 0), largeur: 4.3, hauteur: 1.5 },
+    ];
+
+	platformRailings.forEach((railing, index) => {
+        var mur_railing = creerCloison("platform_railing" + index, { hauteur: railing.hauteur, largeur: railing.largeur, epaisseur: epaisseur, materiau: materiauRampe }, scene);
+        mur_railing.position = railing.position;
+        mur_railing.rotation = railing.rotation;
+    });
+
+    // Define railings for the stairs
+    var y =  5; 
+    var stepDepth = 0.75;
+    var stairsRailings = [];
+
+    for (var i = 0; i < 15; i++) {
+        stairsRailings.push(
+            { position: new BABYLON.Vector3(10, y - (i * 0.35), -0.4 - (i * stepDepth)), rotation: -1 },
+            { position: new BABYLON.Vector3(14, y - (i * 0.35), -0.4 - (i * stepDepth)), rotation: -1 }
+        );
+    }
+    stairsRailings.forEach((railing, index) => {
+        var mur_railing = creerCloison("stairs_railing" + index, { hauteur: railing_hauteur, largeur: 0.75, epaisseur: epaisseur, materiau: materiauRampe }, scene);
+        mur_railing.position = railing.position;
+        mur_railing.rotation.y =  BABYLON.Tools.ToRadians(90);
+    });
+
+	for (var i = 0; i < 15; i++) {
+		stairsRailings.push(
+			{ position: new BABYLON.Vector3(-10, y - (i * 0.35), -0.4 - (i * stepDepth)), rotation: -1 },
+			{ position: new BABYLON.Vector3(-14, y - (i * 0.35), -0.4 - (i * stepDepth)), rotation: -1 }
+		);
+    }
+    stairsRailings.forEach((railing, index) => {
+        var mur_railing = creerCloison("stairs_railing" + index, { hauteur: railing_hauteur, largeur: 0.75, epaisseur: epaisseur, materiau: materiauRampe }, scene);
+        mur_railing.position = railing.position;
+        mur_railing.rotation.y =  BABYLON.Tools.ToRadians(90);
+    });
+}
+
 function creerAvatar1(nom, opts, scn) {
     const groupe = new BABYLON.TransformNode("group-" + nom);
     
@@ -306,6 +359,7 @@ const PRIMS = {
     "ground": creerSol,
     "sky": creerCiel,
     "creuser": creuser,
+	"CreateRailing": CreateRailing,
     "createSlidingDoor": createSlidingDoor,
     "animateDoor": animateDoor,
     "creerEscalier": creerEscalier,

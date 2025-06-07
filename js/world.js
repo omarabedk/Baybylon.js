@@ -322,6 +322,8 @@ class World extends Simu {
         plafond1.position = new BABYLON.Vector3(0, 10, -15);
         plafond1.rotation.x = Math.PI / 2;
 
+        PRIMS.CreateRailing(scene);
+
         PRIMS.CreuserPorte(mur1, { x: 0, y: 1, z: -15, material: glassMaterial }, scene);
         mur9 = PRIMS.CreuserPorte(mur9, { x: -10, y: 1, z: 0.3, material: Wall1 }, scene);
         mur9 = PRIMS.CreuserPorte(mur9, { x: 0, y: 1, z: 0.3, material: Wall1 }, scene);
