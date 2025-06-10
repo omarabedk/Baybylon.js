@@ -127,25 +127,41 @@ function creerBoite(nom, opts, scn){
 	return box;
 }
 
-function creerPoster(nom,opts,scn){
+function creerPoster(nom, opts, scn){
 	let options = opts || {} ; 
 	let hauteur = options["hauteur"] || 1.0 ; 
 	let largeur = options["largeur"] || 1.0 ; 	
 	let textureName = options["tableau"] || ""; 
-	var group = new BABYLON.TransformNode("group-"+nom)
-	var tableau1 = BABYLON.MeshBuilder.CreatePlane("tableau-" + nom, {width:largeur,height:hauteur}, scn);
-	var verso = BABYLON.MeshBuilder.CreatePlane("verso-" + nom, {width:largeur,height:hauteur}, scn);
+	let titre = options["titre"] || "Sans titre";
+	let description = options["description"] || "Pas de description.";
+
+	const group = new BABYLON.TransformNode("group-"+nom);
+
+	const tableau1 = BABYLON.MeshBuilder.CreatePlane("tableau-" + nom, {width:largeur,height:hauteur}, scn);
+	const verso = BABYLON.MeshBuilder.CreatePlane("verso-" + nom, {width:largeur,height:hauteur}, scn);
+
 	tableau1.parent = group ; 
-	tableau1.position.z = -0.01 ; 
 	verso.parent = group ; 
 	verso.rotation.y = Math.PI ; 
-	var mat = new BABYLON.StandardMaterial("tex-tableau-" + nom, scn);
+	tableau1.position.z = -0.01 ; 
+
+	const mat = new BABYLON.StandardMaterial("tex-tableau-" + nom, scn);
 	mat.diffuseTexture = new BABYLON.Texture(textureName, scn);
-	mat.diffuseTexture.uScale = -1; // Flips horizontally
+	mat.diffuseTexture.uScale = -1;
 	tableau1.material = mat;
+
 	tableau1.checkCollisions = true;
+
+	// Ajouter les métadonnées
+	group.metadata = {
+		type: "poster",
+		titre: titre,
+		description: description
+	};
+
 	return group ; 
 }
+
 
 function creerCloison(nom,opts,scn){
 	let options   = opts || {} ; 
@@ -347,6 +363,7 @@ function creerAvatar1(nom, opts, scn) {
     return groupe;
 }
 
+
 const PRIMS = {
     "camera": creerCamera,
     "reticule": creerReticule,
@@ -359,9 +376,9 @@ const PRIMS = {
     "ground": creerSol,
     "sky": creerCiel,
     "creuser": creuser,
-	"CreateRailing": CreateRailing,
     "createSlidingDoor": createSlidingDoor,
     "animateDoor": animateDoor,
+	"CreateRailing": CreateRailing,
     "creerEscalier": creerEscalier,
     "CreuserPorte": CreuserPorte,
     "avatar1": creerAvatar1

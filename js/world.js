@@ -18,7 +18,7 @@ class World extends Simu {
             new BABYLON.Vector3(10, 0, -15),
             new BABYLON.Vector3(20, 0, -5)
         ]; // Open areas
-        // Define the guide's movement sequence
+
         this.guideSequence = [
             // Main position
             {
@@ -230,6 +230,8 @@ class World extends Simu {
         ];
     }
 
+    
+
     requete_http(www, port, requete, foo) {
         const entete = "http://" + www + ":" + port + "/" + requete;
         loadJSON(entete, (res) => {
@@ -254,19 +256,21 @@ class World extends Simu {
         this.camera.keysLeft = [37, 81];
         this.camera.keysRight = [39, 68];
 
+        const ui = creerInterfaceUI(scene);
+
         const light0 = new BABYLON.HemisphericLight("light0", new BABYLON.Vector3(1, 1, 0), scene);
         const light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, -1, 0), scene);
         light1.intensity = 0.2;
         const light2 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(-2, 2, 0), scene);
         light2.intensity = 0.4;
 
-        const Wall = PRIMS.standardMaterial("mat_wall", { texture: "./assets/wall.jpg" }, scene);
-        const Wall1 = PRIMS.standardMaterial("mat_wall1", { texture: "./assets/texture_mur.jpg", uScale: 3, vScale: 1 }, scene);
-        const Sol = PRIMS.standardMaterial("mat_sol", { texture: "./assets/textures/cracks_roughness.jpg", uScale: 20, vScale: 20 }, scene);
-        const Stairs = PRIMS.standardMaterial("mat_stairs", { texture: "./assets/wood1.jpg" }, scene);
+        const Wall = PRIMS.standardMaterial("mat_wall", { texture: "./assets/aged-concrete-wall.jpg" }, scene);
+        const Wall1 = PRIMS.standardMaterial("mat_wall1", { texture: "./assets/aged-concrete-wall.jpg", uScale: 3, vScale: 1 }, scene);
+        const Sol = PRIMS.standardMaterial("mat_sol", { texture: "./assets/wood-wall-textures.jpg", uScale: 20, vScale: 20 }, scene);
+        const Stairs = PRIMS.standardMaterial("mat_stairs", { texture: "./assets/wood-wall-textures.jpg" }, scene);
         const Plaf = PRIMS.standardMaterial("mat_plaf", { texture: "./assets/plaf.jpg", uScale: 25, vScale: 25 }, scene);
-        const Plaf1 = PRIMS.standardMaterial("mat_plaf1", { texture: "./assets/plaf1.jpg", uScale: 25, vScale: 25 }, scene);
-        const porte = PRIMS.standardMaterial("porte", { texture: "./assets/porte.jpg", uScale: 1, vScale: 1 }, scene);
+        const Plaf1 = PRIMS.standardMaterial("mat_plaf1", { texture: "./assets/wood-wall-textures.jpg", uScale: 25, vScale: 25 }, scene);
+        const porte = PRIMS.standardMaterial("porte", { texture: "./assets/maria-favorskaya-n4r24f2yHrU-unsplash.jpg", uScale: 1, vScale: 1 }, scene);
 
         const ciel = PRIMS.sky("ciel", {}, scene);
         const sol = PRIMS.ground("sol", { materiau: Sol }, scene);
@@ -329,7 +333,7 @@ class World extends Simu {
         mur9 = PRIMS.CreuserPorte(mur9, { x: 0, y: 1, z: 0.3, material: Wall1 }, scene);
         mur9 = PRIMS.CreuserPorte(mur9, { x: 10, y: 1, z: 0.3, material: Wall1 }, scene);
 
-        const poster = PRIMS.poster("poster01", { hauteur: 2, largeur: 2, tableau: "./assets/10.jpg" }, scene);
+        const poster = PRIMS.poster("poster01", { hauteur: 2, largeur: 2, tableau: "./assets/10.jpg" ,titre: "Rue de Siam et grand magasin Monoprix", description: "Vue d’après-guerre de la rue de Siam, artère commerçante reconstruite de Brest" },  scene);
         poster.parent = mur2;
         poster.position.y = 2.5;
         poster.position.z = -9.8;
@@ -337,7 +341,7 @@ class World extends Simu {
         poster.rotation.y = Math.PI;
         this.posters.push({ mesh: poster, position: new BABYLON.Vector3(10, 2.5, -2.3), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster2 = PRIMS.poster("poster02", { hauteur: 2, largeur: 2, tableau: "./assets/7.jpg" }, scene);
+        const poster2 = PRIMS.poster("poster02", { hauteur: 2, largeur: 2, tableau: "./assets/7.jpg", titre: "Vue sur le Vieux Saint-Marc", description: " Paysage côtier avec train à vapeur, dominant la rade de Brest au loin" }, scene);
         poster2.parent = mur2;
         poster2.position.y = 2.5;
         poster2.position.z = -9.8;
@@ -345,7 +349,7 @@ class World extends Simu {
         poster2.rotation.y = Math.PI;
         this.posters.push({ mesh: poster2, position: new BABYLON.Vector3(15, 2.5, -2.3), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster3 = PRIMS.poster("poster03", { hauteur: 2, largeur: 2, tableau: "./assets/11-pont_national.jpg" }, scene);
+        const poster3 = PRIMS.poster("poster03", { hauteur: 2, largeur: 2, tableau: "./assets/11-pont_national.jpg" ,titre: "Pont National détruit pendant la Seconde Guerre mondiale", description: "Restes du pont basculant détruit en 1944, témoignage des bombardements alliés" }, scene);
         poster3.parent = mur2;
         poster3.position.y = 2.5;
         poster3.position.z = -9.8;
@@ -353,7 +357,7 @@ class World extends Simu {
         poster3.rotation.y = Math.PI;
         this.posters.push({ mesh: poster3, position: new BABYLON.Vector3(20, 2.5, -2.3), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster4 = PRIMS.poster("poster04", { hauteur: 2, largeur: 2, tableau: "./assets/21-église_saint_Louis.jpg" }, scene);
+        const poster4 = PRIMS.poster("poster04", { hauteur: 2, largeur: 2, tableau: "./assets/21-église_saint_Louis.jpg", titre: "Église Saint-Louis et marché couvert", description: "Cœur religieux et commercial de Brest avant la guerre, lieu de grande affluence" }, scene);
         poster4.parent = mur2;
         poster4.position.y = 2.5;
         poster4.position.z = -7.5;
@@ -361,7 +365,7 @@ class World extends Simu {
         poster4.rotation.y = -Math.PI / 2;
         this.posters.push({ mesh: poster4, position: new BABYLON.Vector3(7.8, 2.5, 0), facing: new BABYLON.Vector3(1, 0, 0) });
 
-        const poster5 = PRIMS.poster("poster05", { hauteur: 2, largeur: 2, tableau: "./assets/35-caserne_Fautras.jpg" }, scene);
+        const poster5 = PRIMS.poster("poster05", { hauteur: 2, largeur: 2, tableau: "./assets/35-caserne_Fautras.jpg", titre: "Caserne Fautras et son quartier militaire", description: "Bâtiment militaire du XIXe siècle, au cœur d’un ancien ensemble de casernements" }, scene);
         poster5.parent = mur2;
         poster5.position.y = 2.5;
         poster5.position.z = -2.5;
@@ -369,7 +373,7 @@ class World extends Simu {
         poster5.rotation.y = -Math.PI / 2;
         this.posters.push({ mesh: poster5, position: new BABYLON.Vector3(7.8, 2.5, 5), facing: new BABYLON.Vector3(1, 0, 0) });
 
-        const poster6 = PRIMS.poster("poster06", { hauteur: 2, largeur: 2, tableau: "./assets/36-pont_transbordeur.jpg" }, scene);
+        const poster6 = PRIMS.poster("poster06", { hauteur: 2, largeur: 2, tableau: "./assets/36-pont_transbordeur.jpg", titre: "Le pont transbordeur de Brest", description: " Structure métallique emblématique permettant le transport au-dessus de la Penfeld" }, scene);
         poster6.parent = mur2;
         poster6.position.y = 2.5;
         poster6.position.z = -0.3;
@@ -377,7 +381,7 @@ class World extends Simu {
         poster6.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster6, position: new BABYLON.Vector3(20, 2.5, 7.2), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster7 = PRIMS.poster("poster07", { hauteur: 2, largeur: 2, tableau: "./assets/40-portes_nationales.jpg" }, scene);
+        const poster7 = PRIMS.poster("poster07", { hauteur: 2, largeur: 2, tableau: "./assets/40-portes_nationales.jpg", titre: "Les Portes Nationales de Brest", description: " Ancienne entrée monumentale du port militaire, gardée et utilisée jusqu’au XXe siècle" }, scene);
         poster7.parent = mur2;
         poster7.position.y = 2.5;
         poster7.position.z = -0.3;
@@ -385,7 +389,7 @@ class World extends Simu {
         poster7.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster7, position: new BABYLON.Vector3(15, 2.5, 7.2), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster8 = PRIMS.poster("poster08", { hauteur: 2, largeur: 2, tableau: "./assets/45-place_des_portes_et_rue_de_Siam.jpg" }, scene);
+        const poster8 = PRIMS.poster("poster08", { hauteur: 2, largeur: 2, tableau: "./assets/45-place_des_portes_et_rue_de_Siam.jpg", titre: " Place des Portes et rue de Siam", description: "Carrefour central animé de Brest, reliant le port à la haute ville commerçante" }, scene);
         poster8.parent = mur2;
         poster8.position.y = 2.5;
         poster8.position.z = -0.3;
@@ -393,7 +397,7 @@ class World extends Simu {
         poster8.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster8, position: new BABYLON.Vector3(10, 2.5, 7.2), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster9 = PRIMS.poster("poster09", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/tombe-ouessant.jpg" }, scene);
+        const poster9 = PRIMS.poster("poster09", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/tombe-ouessant.jpg", titre: "Tombe du recteur Pierre Picart", description: "Tombe monumentale d’un ancien recteur d’Ouessant, en granit sculpté" }, scene);
         poster9.parent = mur2;
         poster9.position.y = 2.5;
         poster9.position.z = -19.5;
@@ -401,7 +405,7 @@ class World extends Simu {
         poster9.rotation.y = Math.PI;
         this.posters.push({ mesh: poster9, position: new BABYLON.Vector3(10, 2.5, -12), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster10 = PRIMS.poster("poster10", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/costume-de-mariee-1880-ouessant.jpg" }, scene);
+        const poster10 = PRIMS.poster("poster10", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/costume-de-mariee-1880-ouessant.jpg", titre: "Costume de mariée ouessantin (1880)", description: "Habit traditionnel féminin richement brodé, porté pour les grandes cérémonies" }, scene);
         poster10.parent = mur2;
         poster10.position.y = 2.5;
         poster10.position.z = -19.5;
@@ -409,7 +413,7 @@ class World extends Simu {
         poster10.rotation.y = Math.PI;
         this.posters.push({ mesh: poster10, position: new BABYLON.Vector3(15, 2.5, -12), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster11 = PRIMS.poster("poster11", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/creche-ouessant.jpg" }, scene);
+        const poster11 = PRIMS.poster("poster11", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/creche-ouessant.jpg", titre: "Crèche ouessantine en pierre", description: "Étable en pierre servant d’abri pour les animaux de l’île d’Ouessant" }, scene);
         poster11.parent = mur2;
         poster11.position.y = 2.5;
         poster11.position.z = -19.5;
@@ -417,7 +421,7 @@ class World extends Simu {
         poster11.rotation.y = Math.PI;
         this.posters.push({ mesh: poster11, position: new BABYLON.Vector3(20, 2.5, -12), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster12 = PRIMS.poster("poster12", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/pyramide-de-runiou-ouessant.jpg" }, scene);
+        const poster12 = PRIMS.poster("poster12", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/pyramide-de-runiou-ouessant.jpg", titre: "Pyramide de Runiou", description: "Ancien amer maritime en granit servant de repère pour la navigation" }, scene);
         poster12.parent = mur2;
         poster12.position.y = 2.5;
         poster12.position.z = -10.4;
@@ -425,7 +429,7 @@ class World extends Simu {
         poster12.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster12, position: new BABYLON.Vector3(20, 2.5, -2.9), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster13 = PRIMS.poster("poster13", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/port-de-bougezenn-ouessant.jpg" }, scene);
+        const poster13 = PRIMS.poster("poster13", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/port-de-bougezenn-ouessant.jpg", titre: "Port de Bougezenn", description: "Petit port en granit battu par les vagues, typique du littoral ouessantin" }, scene);
         poster13.parent = mur2;
         poster13.position.y = 2.5;
         poster13.position.z = -10.4;
@@ -433,7 +437,7 @@ class World extends Simu {
         poster13.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster13, position: new BABYLON.Vector3(15, 2.5, -2.9), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster14 = PRIMS.poster("poster14", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/sainte-barbe-ouessant.jpg" }, scene);
+        const poster14 = PRIMS.poster("poster14", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/sainte-barbe-ouessant.jpg", titre: "Statue de Sainte Barbe", description: "Sculpture religieuse ancienne, patronne des pompiers et des mineurs" }, scene);
         poster14.parent = mur2;
         poster14.position.y = 2.5;
         poster14.position.z = -10.4;
@@ -441,7 +445,7 @@ class World extends Simu {
         poster14.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster14, position: new BABYLON.Vector3(10, 2.5, -2.9), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster15 = PRIMS.poster("poster15", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/eglise-saint-paul-aurelien-ouessant.jpg" }, scene);
+        const poster15 = PRIMS.poster("poster15", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/eglise-saint-paul-aurelien-ouessant.jpg", titre: "Église Saint-Pol-Aurélien d’Ouessant", description: "Église paroissiale principale de l’île, à clocher élancé et style gothique" }, scene);
         poster15.parent = mur2;
         poster15.position.y = 2.5;
         poster15.position.z = -12.5;
@@ -449,7 +453,7 @@ class World extends Simu {
         poster15.rotation.y = -Math.PI / 2;
         this.posters.push({ mesh: poster15, position: new BABYLON.Vector3(7.8, 2.5, -5), facing: new BABYLON.Vector3(1, 0, 0) });
 
-        const poster16 = PRIMS.poster("poster16", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/chapelle-notre-dame-desperance-ouessant.jpg" }, scene);
+        const poster16 = PRIMS.poster("poster16", { hauteur: 2, largeur: 2, tableau: "./assets/ouessant/chapelle-notre-dame-desperance-ouessant.jpg", titre: "Chapelle Notre-Dame d’Espérance", description: "Chapelle isolée dédiée à la Vierge, située dans un cadre rural paisible" }, scene);
         poster16.parent = mur2;
         poster16.position.y = 2.5;
         poster16.position.z = -17.5;
@@ -457,7 +461,7 @@ class World extends Simu {
         poster16.rotation.y = -Math.PI / 2;
         this.posters.push({ mesh: poster16, position: new BABYLON.Vector3(7.8, 2.5, -10), facing: new BABYLON.Vector3(1, 0, 0) });
 
-        const poster17 = PRIMS.poster("poster17", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/1.jpg" }, scene);
+        const poster17 = PRIMS.poster("poster17", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/1.jpg", titre: "Bal dans un palais parisien", description: "Couples élégants dansent sous un plafond peint, dans une salle luxueuse" }, scene);
         poster17.parent = mur2;
         poster17.position.y = 2.5;
         poster17.position.z = -29.7;
@@ -465,7 +469,7 @@ class World extends Simu {
         poster17.rotation.y = Math.PI;
         this.posters.push({ mesh: poster17, position: new BABYLON.Vector3(10, 2.5, -22.2), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster18 = PRIMS.poster("poster18", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/2.jpg" }, scene);
+        const poster18 = PRIMS.poster("poster18", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/2.jpg", titre: "Salon de mode de la Belle Époque", description: "Femmes élégantes choisissent chapeaux et robes dans un salon animé" }, scene);
         poster18.parent = mur2;
         poster18.position.y = 2.5;
         poster18.position.z = -29.7;
@@ -473,7 +477,7 @@ class World extends Simu {
         poster18.rotation.y = Math.PI;
         this.posters.push({ mesh: poster18, position: new BABYLON.Vector3(15, 2.5, -22.2), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster19 = PRIMS.poster("poster19", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/hall.jpg" }, scene);
+        const poster19 = PRIMS.poster("poster19", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/hall.jpg", titre: "Rivage calme avec barque échouée", description: "Scène paisible d’un rivage boisé, montagnes au loin et barque abandonnée" }, scene);
         poster19.parent = mur2;
         poster19.position.y = 2.5;
         poster19.position.z = -29.7;
@@ -481,7 +485,7 @@ class World extends Simu {
         poster19.rotation.y = Math.PI;
         this.posters.push({ mesh: poster19, position: new BABYLON.Vector3(20, 2.5, -22.2), facing: new BABYLON.Vector3(0, 0, -1) });
 
-        const poster20 = PRIMS.poster("poster20", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/4.jpg" }, scene);
+        const poster20 = PRIMS.poster("poster20", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/4.jpg", titre: "Dernier voyage du Téméraire – J.M.W. Turner", description: "Coucher de soleil dramatique derrière un navire de guerre remorqué au loin" }, scene);
         poster20.parent = mur2;
         poster20.position.y = 2.5;
         poster20.position.z = -20.3;
@@ -489,7 +493,7 @@ class World extends Simu {
         poster20.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster20, position: new BABYLON.Vector3(20, 2.5, -12.8), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster21 = PRIMS.poster("poster21", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/5.jpg" }, scene);
+        const poster21 = PRIMS.poster("poster21", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/5.jpg", titre: "Boulevard Montmartre – Camille Pissarro", description: "Rue parisienne animée vue en hauteur, typique de l’impressionnisme" }, scene);
         poster21.parent = mur2;
         poster21.position.y = 2.5;
         poster21.position.z = -20.3;
@@ -497,7 +501,7 @@ class World extends Simu {
         poster21.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster21, position: new BABYLON.Vector3(15, 2.5, -12.8), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster22 = PRIMS.poster("poster22", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/6.jpg" }, scene);
+        const poster22 = PRIMS.poster("poster22", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/6.jpg", titre: "Animation sur les grands boulevards", description: "Scène urbaine élégante, passants et fiacres sous les arbres de Paris" }, scene);
         poster22.parent = mur2;
         poster22.position.y = 2.5;
         poster22.position.z = -20.3;
@@ -505,7 +509,7 @@ class World extends Simu {
         poster22.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster22, position: new BABYLON.Vector3(10, 2.5, -12.8), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster23 = PRIMS.poster("poster23", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/7.jpg" }, scene);
+        const poster23 = PRIMS.poster("poster23", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/7.jpg", titre: "Soirée élégante au pavillon éclairé", description: "Clients raffinés dînent en terrasse sous une architecture Belle Époque" }, scene);
         poster23.parent = mur2;
         poster23.position.y = 2.5;
         poster23.position.z = -22.5;
@@ -513,13 +517,137 @@ class World extends Simu {
         poster23.rotation.y = -Math.PI / 2;
         this.posters.push({ mesh: poster23, position: new BABYLON.Vector3(7.8, 2.5, -15), facing: new BABYLON.Vector3(1, 0, 0) });
 
-        const poster24 = PRIMS.poster("poster24", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/8.jpg" }, scene);
+        const poster24 = PRIMS.poster("poster24", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/8.jpg", titre: "Terrasse de café au bois de Boulogne", description: "Parisiens en promenade à vélo et à pied dans un parc animé" }, scene);
         poster24.parent = mur2;
         poster24.position.y = 2.5;
         poster24.position.z = -27.5;
         poster24.position.x = -7.2;
         poster24.rotation.y = -Math.PI / 2;
         this.posters.push({ mesh: poster24, position: new BABYLON.Vector3(7.8, 2.5, -20), facing: new BABYLON.Vector3(1, 0, 0) });
+
+
+        scene.onBeforeRenderObservable.add(() => {
+            const camera = scene.activeCamera;
+            let found = false;
+        
+            for (let p of this.posters) {
+                const posterMesh = p.mesh;
+                const distance = BABYLON.Vector3.Distance(camera.position, posterMesh.getAbsolutePosition());
+        
+                if (distance < 4) {
+                    const directionToPoster = posterMesh.getAbsolutePosition().subtract(camera.position).normalize();
+                    const cameraForward = camera.getForwardRay().direction;
+                    const alignment = BABYLON.Vector3.Dot(cameraForward, directionToPoster);
+        
+                    if (alignment > 0.9) {
+                        const metadata = posterMesh.metadata || {};
+                        ui.show(metadata.titre || "Sans titre", metadata.description || "Pas de description.");
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        
+            if (!found) {
+                ui.hide();
+            }
+        });
+        
+
+        function importStatue(scene, filePath, fileName, position, scaling, initialRotation, texturePath, rotationAxis = null, rotationSpeed = 0) {
+            BABYLON.SceneLoader.ImportMesh(
+                "",
+                filePath, 
+                fileName, 
+                scene,
+                function (meshes) {
+                    console.log(`Loaded ${fileName} from ${filePath}`);
+                    if (meshes.length > 0) {
+                        const statue = new BABYLON.TransformNode("statueRoot", scene);
+                        
+                        // Create the material with the texture
+                        const statueMaterial = new BABYLON.StandardMaterial("statueMaterial", scene);
+                        statueMaterial.diffuseTexture = new BABYLON.Texture(texturePath, scene);
+                        
+                        // Parent all meshes to the root node and apply the material
+                        meshes.forEach(mesh => {
+                            mesh.parent = statue;
+                            mesh.material = statueMaterial;
+                        });
+        
+                        // Apply transformations to the root node
+                        statue.position = position;
+                        statue.scaling = scaling;
+                        if (initialRotation) {
+                            statue.rotation = initialRotation;
+                        }
+        
+                        // If a rotation axis and speed are provided, add continuous rotation
+                        if (rotationAxis && rotationSpeed !== 0) {
+                            scene.registerBeforeRender(function () {
+                                statue.rotate(rotationAxis, rotationSpeed, BABYLON.Space.LOCAL);
+                            });
+                        }
+                    } else {
+                        console.error(`No meshes found in ${fileName} from ${filePath}`);
+                    }
+                },
+                null,
+                function (scene, message, exception) {
+                    console.error(`Error loading ${fileName} from ${filePath}`, message, exception);
+                }
+            );
+        }
+        
+        // Import multiple statues
+        function importStatues(scene) {
+            
+            importStatue(
+                scene,
+                "./assets/obj/objects/", 
+                "bust.obj", 
+                new BABYLON.Vector3(7.5, 5, 9),
+                new BABYLON.Vector3(4, 4, 4),
+                new BABYLON.Vector3(0,0, 0),
+                "./assets/textures/a.png", 
+                BABYLON.Axis.Y, 
+                0.009 
+            );
+        
+            importStatue(
+                scene,
+                "./assets/obj/objects/", 
+                "horse.obj",
+                new BABYLON.Vector3(-5, 0, -2), 
+                new BABYLON.Vector3(16, 16, 16), 
+                new BABYLON.Vector3(0, Math.PI, 0),
+                "./assets/textures/horseTexture.png", 
+                BABYLON.Axis.Y, 
+                0.04 
+            );
+        
+            importStatue(
+                scene,
+                "./assets/obj/objects/", 
+                "liberta.obj", 
+                new BABYLON.Vector3(5 , 0, -3), 
+                new BABYLON.Vector3(0.4, 0.4, 0.4),
+                new BABYLON.Vector3(-Math.PI/2,Math.PI, 0),
+                "./assets/textures/sanama.png"  
+            );
+
+            importStatue(
+                scene,
+                "./assets/obj/objects/", 
+                "12338_Statue_v1_L3.obj", 
+                new BABYLON.Vector3(-5, 5.2, 9), 
+                new BABYLON.Vector3(0.02, 0.02, 0.02), 
+                new BABYLON.Vector3(-Math.PI/2,Math.PI, 0),
+                "./assets/textures/sanama.png"  
+            );
+        
+            }
+            importStatues(scene);
 
         console.log("Poster world positions:", this.posters.map((p, i) => `poster${i + 1}: ${p.position.toString()}`));
 
@@ -674,7 +802,6 @@ class World extends Simu {
                         
                         // Optional: Add teleportation effect
                         const particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
-                        particleSystem.particleTexture = new BABYLON.Texture("assets/textures/flare.png", scene);
                         particleSystem.emitter = this.camera.position;
                         particleSystem.minEmitBox = new BABYLON.Vector3(-1, -1, -1);
                         particleSystem.maxEmitBox = new BABYLON.Vector3(1, 1, 1);
@@ -754,6 +881,8 @@ class World extends Simu {
         this.moveGuideToNextWaypoint(scene);
     }
 
+    
+
     createTeleportationSphere(position, scene) {
         const sphere = BABYLON.MeshBuilder.CreateSphere("teleportSphere", { diameter: 1 }, scene);
         sphere.position = position;
@@ -806,6 +935,7 @@ class World extends Simu {
             isAnimating: false
         };
     }
+
 
     computePath(start, end, scene) {
         const path = [start.clone()];
@@ -1071,6 +1201,47 @@ class World extends Simu {
 
         scene.onBeforeRenderObservable.add(moveToTarget);
     }
+
+    
 }
+
+function creerInterfaceUI(scene) {
+    const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI", true, scene);
+    const panel = new BABYLON.GUI.StackPanel();
+    panel.width = "100%";
+    panel.height = "250px";
+    panel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    panel.paddingBottom = "60px";
+
+    const titreText = new BABYLON.GUI.TextBlock();
+    titreText.text = "";
+    titreText.fontSize = 24;
+    titreText.color = "Black";
+    titreText.height = "60px";
+
+    const descText = new BABYLON.GUI.TextBlock();
+    descText.text = "";
+    descText.fontSize = 16;
+    descText.color = "Black";
+    descText.height = "80px";
+
+    panel.addControl(titreText);
+    panel.addControl(descText);
+    gui.addControl(panel);
+
+    panel.isVisible = false;
+
+    return {
+        show: (titre, desc) => {
+            titreText.text = titre;
+            descText.text = desc;
+            panel.isVisible = true;
+        },
+        hide: () => {
+            panel.isVisible = false;
+        }
+    };
+}
+
 
 export {World};
