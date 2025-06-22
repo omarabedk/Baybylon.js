@@ -264,7 +264,7 @@ class World extends Simu {
         const light2 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(-2, 2, 0), scene);
         light2.intensity = 0.4;
 
-        const Wall = PRIMS.standardMaterial("mat_wall", { texture: "./assets/aged-concrete-wall.jpg" }, scene);
+        //const Wall = PRIMS.standardMaterial("mat_wall", { texture: "./assets/aged-concrete-wall.jpg" }, scene);
         const Wall1 = PRIMS.standardMaterial("mat_wall1", { texture: "./assets/aged-concrete-wall.jpg", uScale: 3, vScale: 1 }, scene);
         const Sol = PRIMS.standardMaterial("mat_sol", { texture: "./assets/wood-wall-textures.jpg", uScale: 20, vScale: 20 }, scene);
         const Stairs = PRIMS.standardMaterial("mat_stairs", { texture: "./assets/wood-wall-textures.jpg" }, scene);
@@ -493,7 +493,8 @@ class World extends Simu {
         poster20.rotation.y = -2 * Math.PI;
         this.posters.push({ mesh: poster20, position: new BABYLON.Vector3(20, 2.5, -12.8), facing: new BABYLON.Vector3(0, 0, 1) });
 
-        const poster21 = PRIMS.poster("poster21", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/5.jpg", titre: "Boulevard Montmartre – Camille Pissarro", description: "Rue parisienne animée vue en hauteur, typique de l’impressionnisme" }, scene);
+        const poster21 = PRIMS.poster("poster21", { hauteur: 2, largeur: 2, tableau: "./assets/paysage/5.jpg", 
+            titre: "Boulevard Montmartre – Camille Pissarro", description: "Rue parisienne animée vue en hauteur, typique de l’impressionnisme" }, scene);
         poster21.parent = mur2;
         poster21.position.y = 2.5;
         poster21.position.z = -20.3;
@@ -564,25 +565,18 @@ class World extends Simu {
                     console.log(`Loaded ${fileName} from ${filePath}`);
                     if (meshes.length > 0) {
                         const statue = new BABYLON.TransformNode("statueRoot", scene);
-                        
-                        // Create the material with the texture
                         const statueMaterial = new BABYLON.StandardMaterial("statueMaterial", scene);
                         statueMaterial.diffuseTexture = new BABYLON.Texture(texturePath, scene);
-                        
-                        // Parent all meshes to the root node and apply the material
                         meshes.forEach(mesh => {
                             mesh.parent = statue;
                             mesh.material = statueMaterial;
                         });
-        
-                        // Apply transformations to the root node
                         statue.position = position;
                         statue.scaling = scaling;
                         if (initialRotation) {
                             statue.rotation = initialRotation;
                         }
-        
-                        // If a rotation axis and speed are provided, add continuous rotation
+
                         if (rotationAxis && rotationSpeed !== 0) {
                             scene.registerBeforeRender(function () {
                                 statue.rotate(rotationAxis, rotationSpeed, BABYLON.Space.LOCAL);
@@ -649,7 +643,6 @@ class World extends Simu {
             }
             importStatues(scene);
 
-        console.log("Poster world positions:", this.posters.map((p, i) => `poster${i + 1}: ${p.position.toString()}`));
 
         this.doors.push(this.createDoor("door1", new BABYLON.Vector3(0, 1.5, -15), porte, scene));
         this.doors.push(this.createDoor("door2", new BABYLON.Vector3(-10, 1.5, 0.3), porte, scene));
@@ -669,13 +662,11 @@ class World extends Simu {
                     doorData.doorState = "open";
                     await PRIMS.animateDoor(door, door.position, openPosition, scene, 2);
                     doorData.isAnimating = false;
-                    console.log(`${door.name} opened`);
                 } else if (distance >= proximityThreshold && doorState !== "closed" && !isAnimating) {
                     doorData.isAnimating = true;
                     doorData.doorState = "closed";
                     await PRIMS.animateDoor(door, door.position, closedPosition, scene, 1);
                     doorData.isAnimating = false;
-                    console.log(`${door.name} closed`);
                 }
             }
         });
@@ -787,20 +778,16 @@ class World extends Simu {
             this.teleportationSpheres.forEach(sphere => {
                 const distance = BABYLON.Vector3.Distance(cameraPosition, sphere.position);
                 
-                // Highlight sphere when camera is near
                 if (distance < 7) {
                     if (!sphere._entered) {
                         sphere.material.diffuseColor = BABYLON.Color3.Random();
                         sphere._entered = true;
                     }
-                    
-                    // Check for left mouse click (button 0)
+
                     if (scene.pointerDown && scene.pointerDown.button === 0) {
-                        // Teleport camera to sphere position
                         this.camera.position.copyFrom(sphere.position);
-                        this.camera.position.y += 2; // Adjust height so camera isn't inside the sphere
+                        this.camera.position.y += 2;
                         
-                        // Optional: Add teleportation effect
                         const particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
                         particleSystem.emitter = this.camera.position;
                         particleSystem.minEmitBox = new BABYLON.Vector3(-1, -1, -1);
@@ -892,34 +879,7 @@ class World extends Simu {
         return sphere;
     }
 
-    updateTeleportationSpheres(scene) {
-        const camera = scene.activeCamera;
-        let closestSphere = null;
-        let closestDistance = Infinity;
-        this.teleportationSpheres.forEach(sphere => {
-            sphere.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
-            sphere.material.alpha = 0.5;
-            const distance = BABYLON.Vector3.Distance(camera.position, sphere.position);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestSphere = sphere;
-            }
-        });
-        if (closestSphere && closestDistance < 20) {
-            closestSphere.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
-            closestSphere.material.alpha = 0.8;
-        }
-    }
 
-    teleport(scene) {
-        const camera = scene.activeCamera;
-        this.teleportationSpheres.forEach(sphere => {
-            if (sphere.material.diffuseColor.equals(new BABYLON.Color3(1, 0, 0))) {
-                camera.position.copyFrom(sphere.position);
-                camera.position.y += 2;
-            }
-        });
-    }
 
     createDoor(name, position, material, scene) {
         let door = PRIMS.createSlidingDoor(name, { width: 3, height: 5, material }, scene);
@@ -955,7 +915,6 @@ class World extends Simu {
         if (!hit || !hit.hit) {
             // Direct path is clear, return start and end points
             path.push(end.clone());
-            console.log("Direct path computed:", path.map(p => p.toString()));
             return path;
         }
 
@@ -991,7 +950,6 @@ class World extends Simu {
             }
 
             if (!bestWaypoint) {
-                console.log("No clear waypoint found, using direct path");
                 break;
             }
 
@@ -1000,19 +958,16 @@ class World extends Simu {
         }
 
         path.push(end.clone());
-        console.log("Computed path:", path.map(p => p.toString()));
         return path;
     }
 
     moveGuideToNextWaypoint(scene) {
         if (this.currentWaypointIndex >= this.guideSequence.length) {
-            console.log("Guide has completed the sequence.");
             this.isGuideMoving = false;
             return;
         }
 
         if (this.isGuideMoving) {
-            console.log("Guide is already moving, ignoring new request.");
             return;
         }
 
@@ -1031,14 +986,11 @@ class World extends Simu {
             return;
         }
 
-        console.log(`Guide moving to waypoint ${this.currentWaypointIndex + 1}/${this.guideSequence.length}`);
-
         this.animateGuideToPosition(scene, targetPosition, facingDirection, waitTime, `waypoint${this.currentWaypointIndex + 1}`);
     }
 
     animateGuideToPosition(scene, targetPosition, finalFacingDirection, waitTime, waypointName) {
         if (this.isGuideMoving) {
-            console.log("Guide is already moving, ignoring new request.");
             return;
         }
         this.isGuideMoving = true;
@@ -1058,13 +1010,12 @@ class World extends Simu {
                 if (head) {
                     head.rotation.y = 0; // Align head with body to face target
                 }
-                console.log(`Guide reached ${waypointName} at position ${guide.position.toString()}`);
                 this.isGuideMoving = false;
                 this.guidePath = [];
                 scene.onBeforeRenderObservable.removeCallback(moveToTarget);
 
                 if (waitTime === Infinity) {
-                    console.log("Guide stopping indefinitely at final position.");
+
                     return;
                 }
 
@@ -1091,9 +1042,6 @@ class World extends Simu {
 
             const ray = new BABYLON.Ray(currentPosition, direction, 1.5);
             const hit = scene.pickWithRay(ray, (mesh) => {
-                if (!mesh.name) {
-                    console.log(`Mesh with undefined name detected at ${mesh.getAbsolutePosition().toString()}`);
-                }
                 return mesh !== guide &&
                     mesh.checkCollisions &&
                     mesh !== guide.parent &&
@@ -1104,9 +1052,6 @@ class World extends Simu {
 
             guide.position = nextPosition;
             const collisions = scene.meshes.filter(mesh => {
-                if (!mesh.name) {
-                    console.log(`Mesh with undefined name detected at ${mesh.getAbsolutePosition().toString()}`);
-                }
                 return mesh !== guide &&
                     mesh.checkCollisions &&
                     mesh !== guide.parent &&
@@ -1165,7 +1110,6 @@ class World extends Simu {
                             head.rotation.y = 0; // Align head with body
                         }
                     }
-                    console.log(`Avoiding collision, moving to ${nextPosition.toString()}`);
                 } else {
                     nextPosition = currentPosition.clone();
                     nextPosition.y += 0.1;
@@ -1189,13 +1133,9 @@ class World extends Simu {
             }
 
             guide.position = nextPosition;
-
-            const currentDistance = BABYLON.Vector3.Distance(guide.position, currentTarget);
-            console.log(`Guide at ${guide.position.toString()}, distance to waypoint ${currentWaypointIndex + 1}: ${currentDistance.toFixed(2)}`);
-
+            
             if (BABYLON.Vector3.DistanceSquared(guide.position, currentTarget) < distanceThreshold) {
                 currentWaypointIndex++;
-                console.log(`Reached waypoint ${currentWaypointIndex}/${this.guidePath.length}`);
             }
         };
 
